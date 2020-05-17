@@ -1,20 +1,33 @@
 package br.com.vini.pm73.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.hibernate.Session;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.com.vini.pm73.dominio.Usuario;
 
 public class UsuarioDaoTest {
 	
+	private static Session session;
+	private static UsuarioDao usuarioDao;
+
+	@BeforeClass
+	public static void init() {
+		session = new CriadorDeSessao().getSession();
+		usuarioDao = new UsuarioDao(session);
+	}
+	
+	@AfterClass
+	public static void finish() {
+		session.close();
+	}
+	
 	@Test
 	public void deveEncontrarPeloNomeEmail() {
-		
-		Session session = new CriadorDeSessao().getSession();
-		UsuarioDao usuarioDao = new UsuarioDao(session);
-		
 		Usuario novoUsuario = new Usuario("Joao da Silva", "joao@dasilva.com.br");
 		
 		usuarioDao.salvar(novoUsuario);
@@ -24,7 +37,12 @@ public class UsuarioDaoTest {
 		assertEquals("Joao da Silva", usuario.getNome());
 		assertEquals("joao@dasilva.com.br", usuario.getEmail());
 		
-		session.close();
+	}
+	
+	@Test
+	public void deveRetornarUsuarioNullo() {
+		Usuario usuarioInexistente = usuarioDao.porNomeEEmail("Vinicius de Carvalho", "vinicius@decarvalho.com.br");
+		assertNull(usuarioInexistente);
 	}
 
 }
