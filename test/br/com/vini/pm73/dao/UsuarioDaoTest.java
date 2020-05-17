@@ -19,10 +19,12 @@ public class UsuarioDaoTest {
 	public static void init() {
 		session = new CriadorDeSessao().getSession();
 		usuarioDao = new UsuarioDao(session);
+		session.beginTransaction();
 	}
 	
 	@AfterClass
 	public static void finish() {
+		session.getTransaction().rollback();
 		session.close();
 	}
 	
