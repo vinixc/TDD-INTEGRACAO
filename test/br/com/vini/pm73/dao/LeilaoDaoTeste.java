@@ -3,6 +3,7 @@ package br.com.vini.pm73.dao;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -81,6 +82,26 @@ public class LeilaoDaoTeste {
 		assertEquals(1, novos.size());
 		assertEquals(l2.getNome(), novos.get(0).getNome());
 		
+	}
+	
+	@Test
+	public void deveRetornarAntigos() {
+		Leilao l1 = new Leilao("Geladeira", 1500.0, mauricio, true);
+		Calendar dataAntiga = Calendar.getInstance();
+		dataAntiga.add(Calendar.DAY_OF_MONTH, -10);
+		l1.setDataAbertura(dataAntiga);
+		
+		Leilao l2 = new Leilao("Xbox", 1700.0, mauricio, false);
+		Calendar dataAgora = Calendar.getInstance();
+		l2.setDataAbertura(dataAgora);
+		
+		leilaoDao.salvar(l1);
+		leilaoDao.salvar(l2);
+		
+		List<Leilao> antigos = leilaoDao.antigos();
+		
+		assertEquals(1, antigos.size());
+		assertEquals(l1.getNome(), antigos.get(0).getNome());
 	}
 
 }
