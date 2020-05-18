@@ -4,8 +4,8 @@ package br.com.vini.pm73.dao;
 import static org.junit.Assert.assertEquals;
 
 import org.hibernate.Session;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import br.com.vini.pm73.dominio.Leilao;
@@ -13,14 +13,13 @@ import br.com.vini.pm73.dominio.Usuario;
 
 public class LeilaoDaoTeste {
 	
-	private static Session session;
-	private static LeilaoDao leilaoDao;
-	private static UsuarioDao usuarioDao;
-	private static Usuario mauricio;
+	private  Session session;
+	private  LeilaoDao leilaoDao;
+	private  UsuarioDao usuarioDao;
+	private  Usuario mauricio;
 	
-
-	@BeforeClass
-	public static void init() {
+	@Before
+	public void init() {
 		session = new CriadorDeSessao().getSession();
 		leilaoDao = new LeilaoDao(session);
 		usuarioDao = new UsuarioDao(session);
@@ -30,8 +29,8 @@ public class LeilaoDaoTeste {
 		usuarioDao.salvar(mauricio);
 	}
 	
-	@AfterClass
-	public static void finish() {
+	@After
+	public void finish() {
 		session.getTransaction().rollback();
 		session.close();
 	}
@@ -50,6 +49,20 @@ public class LeilaoDaoTeste {
 		long total = leilaoDao.total();
 		
 		assertEquals(1l, total);
+	}
+	
+	@Test
+	public void deveRetornarZeroNaoEncerrados() {
+		Leilao l1 = new Leilao("Geladeira", 1500.0, mauricio, false);
+		Leilao l2 = new Leilao("Xbox", 700.0, mauricio, false);
+		l1.encerra();
+		l2.encerra();
+		leilaoDao.salvar(l1);
+		leilaoDao.salvar(l2);
+		
+		long total = leilaoDao.total();
+		
+		assertEquals(0l, total);
 	}
 
 }
