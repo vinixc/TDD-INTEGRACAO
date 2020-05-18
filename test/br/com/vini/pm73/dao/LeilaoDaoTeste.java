@@ -88,7 +88,7 @@ public class LeilaoDaoTeste {
 	public void deveRetornarAntigos() {
 		Leilao l1 = new Leilao("Geladeira", 1500.0, mauricio, true);
 		Calendar dataAntiga = Calendar.getInstance();
-		dataAntiga.add(Calendar.DAY_OF_MONTH, -10);
+		dataAntiga.add(Calendar.DAY_OF_MONTH, -7);
 		l1.setDataAbertura(dataAntiga);
 		
 		Leilao l2 = new Leilao("Xbox", 1700.0, mauricio, false);
