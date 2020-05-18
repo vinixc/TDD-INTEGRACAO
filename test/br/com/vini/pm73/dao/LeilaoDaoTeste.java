@@ -3,6 +3,8 @@ package br.com.vini.pm73.dao;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
@@ -63,6 +65,22 @@ public class LeilaoDaoTeste {
 		long total = leilaoDao.total();
 		
 		assertEquals(0l, total);
+	}
+	
+	@Test
+	public void deveRetornarLeilaoNovos() {
+		
+		Leilao l1 = new Leilao("Geladeira", 1500.0, mauricio, true);
+		Leilao l2 = new Leilao("Xbox", 1700.0, mauricio, false);
+		
+		leilaoDao.salvar(l1);
+		leilaoDao.salvar(l2);
+		
+		List<Leilao> novos = leilaoDao.novos();
+		
+		assertEquals(1, novos.size());
+		assertEquals(l2.getNome(), novos.get(0).getNome());
+		
 	}
 
 }
